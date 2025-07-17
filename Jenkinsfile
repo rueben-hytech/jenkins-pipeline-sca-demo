@@ -1,9 +1,10 @@
 pipeline {
     agent any
 
-    environment {
-        MAVEN_OPTS = '-Dmaven.repo.local=.m2/repository'
-    }
+  tools {
+    jdk 'OpenJDK'
+    maven 'mvn' 
+  }
 
     stages {
         stage('SCM') {
