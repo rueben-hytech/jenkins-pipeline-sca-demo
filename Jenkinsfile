@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    environment {
+        MAVEN_OPTS = '-Dmaven.repo.local=.m2/repository'
+    }
+
+    stages {
+        stage('SCM') {
+            steps {
+                echo '🛠️ [DEBUG] Starting SCM stage: Cloning repository...'
+                git branch: 'main', 
+                    changelog: false, 
+                    poll: false, 
+                    url: 'https://github.com/rueben-hytech/jenkins-pipeline-sca-demo.git'
+                echo '✅ [DEBUG] SCM stage completed.'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo '🏗️ [DEBUG] Starting Build stage: Running Maven to build the project...'
+                sh 'mvn clean package -DskipTests'
+                echo '✅ [DEBUG] Build stage completed.'
+            }
+        }
+
+        stage('ODC') {
+            steps {
+                echo '🔍 [DEBUG] Starting ODC stage: Running OWASP Dependency-Check...'
+                dependencyCheck additionalArguments: '--format XML --format HTML', 
+                                 nvdCredentialsId: 'nvd-api-key', 
+                                 odcInstallation: 'ODC'
+                echo '✅ [DEBUG] ODC stage completed.'
+            }
+        }
+
+        stage('Publish SCA Report') {
+            steps {
+                echo '📄 [DEBUG] Publishing SCA report using dependencyCheckPublisher...'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                echo '✅ [DEBUG] SCA report published.'
+            }
+        }
+
+        stage('Publish HTML Report') {
+            steps {
+                echo '🌐 [DEBUG] Publishing HTML report to Jenkins UI...'
+                publishHTML(target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: '.',
+                    reportFiles: 'dependen
