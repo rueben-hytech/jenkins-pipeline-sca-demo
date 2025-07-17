@@ -10,7 +10,8 @@ pipeline {
         stage('SCM') {
             steps {
                 echo '🛠️ [DEBUG] Starting SCM stage: Cloning repository...'
-                git branch: 'main', 
+                git credentialsId: 'Private-Repo-SCA-Demo',
+                    branch: 'main', 
                     changelog: false, 
                     poll: false, 
                     url: 'https://github.com/rueben-hytech/jenkins-pipeline-sca-demo.git'
