@@ -22,6 +22,7 @@ pipeline {
             steps {
                 echo '🏗️ [DEBUG] Starting Build stage: Running Maven to build the project...'
                 sh 'mvn clean package -DskipTests'
+                sh  'mvn dependency:copy-dependencies'
                 echo '✅ [DEBUG] Build stage completed.'
             }
         }
