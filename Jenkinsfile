@@ -51,4 +51,19 @@ pipeline {
                     alwaysLinkToLastBuild: true,
                     keepAll: true,
                     reportDir: '.',
-                    reportFiles: 'dependen
+                    reportFiles: 'dependency-check-report.html',
+                    reportName: 'Dependency-Check Report'
+                ])
+                echo '✅ [DEBUG] HTML report published.'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo '📦 [DEBUG] Archiving dependency-check report artifacts...'
+            archiveArtifacts artifacts: '**/dependency-check-report.*', fingerprint: true
+            echo '✅ [DEBUG] Artifact archiving completed.'
+        }
+    }
+}
