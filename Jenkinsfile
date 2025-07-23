@@ -1,10 +1,10 @@
 pipeline {
     agent any
 
-  tools {
-    jdk 'OpenJDK'
-    maven 'mvn' 
-  }
+    tools {
+        jdk 'OpenJDK'
+        maven 'mvn' 
+    }
 
     stages {
         stage('SCM') {
@@ -23,7 +23,7 @@ pipeline {
             steps {
                 echo '🏗️ [DEBUG] Starting Build stage: Running Maven to build the project...'
                 sh 'mvn clean package -DskipTests'
-                sh  'mvn dependency:copy-dependencies'
+                sh 'mvn dependency:copy-dependencies'
                 echo '✅ [DEBUG] Build stage completed.'
             }
         }
@@ -40,16 +40,18 @@ pipeline {
 
         stage('Snyk SCA') {
             steps {
-                withCredentials([string(credentialsId: 'snyk-api-token', variable: 'SNYK_TOKEN')]) {
+                echo '🧪 [DEBUG] Starting Snyk scan on pom.xml...'
+                withCredentials([string(credentialsId: 'Synk-API-Token', variable: 'SNYK_TOKEN')]) {
                     sh '''
+                        export SNYK_TOKEN=$SNYK_TOKEN
                         snyk auth $SNYK_TOKEN
                         snyk test --file=pom.xml --all-projects || true
                     '''
                 }
+                echo '✅ [DEBUG] Snyk scan completed.'
             }
         }
-      
-        
+
         stage('Publish SCA Report') {
             steps {
                 echo '📄 [DEBUG] Publishing SCA report using dependencyCheckPublisher...'
