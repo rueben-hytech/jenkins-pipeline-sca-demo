@@ -54,6 +54,13 @@ pipeline {
             }
         }
 
+        stage('Debug Tool Path') {
+            steps {
+                echo "✅ [DEBUG] Snyk tool location: ${tool 'snyk@latest'}"
+                sh 'ls -la $(which snyk) || echo "Snyk not found in PATH"'
+            }
+        }
+        
         stage('Publish SCA Report') {
             steps {
                 echo '📄 [DEBUG] Publishing SCA report using dependencyCheckPublisher...'
