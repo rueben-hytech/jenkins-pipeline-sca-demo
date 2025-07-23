@@ -47,7 +47,6 @@ pipeline {
                     projectName: 'vulnerable-app',
                     targetFile: 'pom.xml',
                     monitorProjectOnBuild: true,
-                    sendReport: true,
                     severity: 'medium',
                     failOnIssues: false
                 )
