@@ -43,13 +43,16 @@ pipeline {
             steps {
                 echo '🧪 [DEBUG] Running Snyk scan on pom.xml...'
                 script {
-                    type: 'com.synopsys.integration.jenkins.extensions.tools.SynkInstallation'
+                    def snykTool = tool name: 'snyk@latest', type: 'com.synopsys.integration.jenkins.extensions.tools.SynkInstallation'
                     env.PATH = "${snykTool}/bin:${env.PATH}"
                 }
-                sh 'snyk test --file=pom.xml --all-projects || true'
+                withCredentials([string(credentialsId: 'snyk-api-token', variable: 'SNYK_TOKEN')]) {
+                    sh 'snyk auth $SNYK_TOKEN'
+                    sh 'snyk test --file=pom.xml --all-projects || true'
+                }
                 echo '✅ [DEBUG] Snyk scan completed.'
             }
-        }        
+        }          
         
         stage('Publish SCA Report') {
             steps {
