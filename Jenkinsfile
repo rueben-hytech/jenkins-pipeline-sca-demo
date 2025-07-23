@@ -4,6 +4,7 @@ pipeline {
   tools {
     jdk 'OpenJDK'
     maven 'mvn' 
+    synk 'snyk@latest'
   }
 
     stages {
@@ -41,6 +42,10 @@ pipeline {
         stage('Snyk SCA') {
             steps {
                 echo '🧪 [DEBUG] Running Snyk scan on pom.xml...'
+                script {
+                    type: 'com.synopsys.integration.jenkins.extensions.tools.SynkInstallation'
+                    env.PATH = "${snykTool}/bin:${env.PATH}"
+                }
                 sh 'snyk test --file=pom.xml --all-projects || true'
                 echo '✅ [DEBUG] Snyk scan completed.'
             }
