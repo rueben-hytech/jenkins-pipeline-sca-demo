@@ -38,6 +38,14 @@ pipeline {
             }
         }
 
+        stage('Snyk SCA') {
+            steps {
+                echo '🧪 [DEBUG] Running Snyk scan on pom.xml...'
+                sh 'snyk test --file=pom.xml --all-projects || true'
+                echo '✅ [DEBUG] Snyk scan completed.'
+            }
+        }        
+        
         stage('Publish SCA Report') {
             steps {
                 echo '📄 [DEBUG] Publishing SCA report using dependencyCheckPublisher...'
