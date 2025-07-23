@@ -4,7 +4,6 @@ pipeline {
   tools {
     jdk 'OpenJDK'
     maven 'mvn' 
-    synk 'snyk@latest'
   }
 
     stages {
