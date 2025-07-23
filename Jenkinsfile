@@ -41,13 +41,16 @@ pipeline {
         stage('Snyk SCA') {
             steps {
                 echo '🧪 [DEBUG] Starting Snyk scan on pom.xml...'
-                withCredentials([string(credentialsId: 'Synk-API-Token', variable: 'SNYK_TOKEN')]) {
-                    sh '''
-                        export SNYK_TOKEN=$SNYK_TOKEN
-                        snyk auth $SNYK_TOKEN
-                        snyk test --file=pom.xml --all-projects || true
-                    '''
-                }
+                snykSecurity(
+                    snykInstallation: 'snyk@latest',
+                    snykTokenId: 'Synk-API-Token',
+                    projectName: 'vulnerable-app',
+                    targetFile: 'pom.xml',
+                    monitorProjectOnBuild: true,
+                    sendReport: true,
+                    severity: 'medium',
+                    failOnIssues: false
+                )
                 echo '✅ [DEBUG] Snyk scan completed.'
             }
         }
