@@ -60,7 +60,31 @@ pipeline {
                 sh 'ls -la $(which snyk) || echo "Snyk not found in PATH"'
             }
         }
-        
+
+        stage('SonarQube Analysis') {
+            steps {
+                echo '🔎 [DEBUG] Starting SonarQube analysis...'
+                withSonarQubeEnv('SonarQube-Server') { // Must match your Jenkins SonarQube config name
+                    sh """
+                        mvn sonar:sonar \
+                          -Dsonar.projectKey=rueben-hytech_jenkins-pipeline-sca-demo_c6f473bb-2edf-4a50-bc2e-15448921d358 \
+                          -Dsonar.projectName='jenkins-pipeline-sca-demo'
+                    """
+                }
+                echo '✅ [DEBUG] SonarQube analysis submitted.'
+            }
+        }
+
+        stage('Wait for Quality Gate') {
+            steps {
+                echo '⏳ [DEBUG] Waiting for SonarQube Quality Gate result...'
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+                echo '✅ [DEBUG] Quality Gate passed.'
+            }
+        }     
+   
         stage('Publish SCA Report') {
             steps {
                 echo '📄 [DEBUG] Publishing SCA report using dependencyCheckPublisher...'
