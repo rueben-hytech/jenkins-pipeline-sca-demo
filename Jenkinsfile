@@ -64,7 +64,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 echo '🔎 [DEBUG] Starting SonarQube analysis...'
-                withSonarQubeEnv('SonarQube-Server') { // Must match your Jenkins SonarQube config name
+                withSonarQubeEnv('Sonarqube') { // Must match your Jenkins SonarQube config name
                     sh """
                         mvn sonar:sonar \
                           -Dsonar.projectKey=rueben-hytech_jenkins-pipeline-sca-demo_c6f473bb-2edf-4a50-bc2e-15448921d358 \
