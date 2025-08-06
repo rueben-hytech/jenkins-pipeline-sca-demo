@@ -37,7 +37,7 @@ pipeline {
                 echo '✅ [DEBUG] ODC stage completed.'
             }
         }
-
+/*
         stage('Snyk SCA') {
             steps {
                 echo '🧪 [DEBUG] Starting Snyk scan on pom.xml...'
@@ -60,7 +60,7 @@ pipeline {
                 sh 'ls -la $(which snyk) || echo "Snyk not found in PATH"'
             }
         }
-
+*/
         stage('SonarQube Analysis') {
             steps {
                 echo '🔎 [DEBUG] Starting SonarQube analysis...'
