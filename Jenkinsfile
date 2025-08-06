@@ -42,7 +42,7 @@ pipeline {
             steps {
                 echo '🧪 [DEBUG] Starting Snyk scan on pom.xml...'
                 snykSecurity(
-                    snykInstallation: 'snyk@latest',
+                    snykInstallation: 'snyk-latest',
                     snykTokenId: 'Synk-API-Token',
                     projectName: 'vulnerable-app',
                     targetFile: 'pom.xml',
